@@ -1,16 +1,16 @@
-import * as tweetsRepository from "../model/tweet.js";
+import * as tweetsModel from "../model/tweet.js";
 
 export async function getTweets(req, res) {
     const username = req.query.username;
     const data = await (username
-        ? tweetsRepository.getTweetsByUsername(username)
-        : tweetsRepository.getAllTweets());
+        ? tweetsModel.getTweetsByUsername(username)
+        : tweetsModel.getAllTweets());
     return res.status(200).json(data);
 }
 
 export async function getTweetById(req, res) {
     const id = req.params.id;
-    const data = await tweetsRepository.getTweetsById(id);
+    const data = await tweetsModel.getTweetsById(id);
     if (data) {
         return res.status(200).json(data);
     } else {
@@ -19,15 +19,17 @@ export async function getTweetById(req, res) {
 }
 
 export async function postTweet(req, res) {
-    const { text, username, name } = req.body;
-    const tweet = await tweetsRepository.createTweet(text, name, username);
+    const { text } = req.body;
+    const userid = req.userid;
+    const tweet = await tweetsModel.createTweet(text, userid);
     return res.status(201).json(tweet);
 }
 
 export async function putTweet(req, res) {
     const id = req.params.id;
     const text = req.body.text;
-    const tweet = await tweetsRepository.updateTweet(id, text);
+    const userid = req.userid;
+    const tweet = await tweetsModel.updateTweet(id, text, userid);
     if (tweet) {
         return res.status(200).json(tweet);
     } else {
@@ -37,6 +39,7 @@ export async function putTweet(req, res) {
 
 export async function deleteTweet(req, res) {
     const id = req.params.id;
-    await tweetsRepository.deleteTweet(id);
+    const userid = req.userid;
+    await tweetsModel.deleteTweet(id, userid);
     return res.sendStatus(204);
 }
