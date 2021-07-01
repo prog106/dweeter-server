@@ -1,50 +1,35 @@
 import bcrypt from "bcrypt";
 import { config } from "../config.js";
+import { db } from '../db/database.js';
 
-let users = [
-    {
-        userid: 1624856981977,
-        username: "lsk",
-        password:
-            "$2b$10$Du5jiGH9yROCl0.wXmhFxua/9xN3BEs2rBDcGa5DOHzlLRSbiRkme",
-        name: "LSK",
-        email: "prog106@gmail.com",
-        url: "https://static.popcongame.com/game/game.hotshare.ShurikenHero/tTzRhbCBWm.jpg",
-    },
-    {
-        userid: 1624856981978,
-        username: "prog106",
-        password:
-            "$2b$10$Du5jiGH9yROCl0.wXmhFxua/9xN3BEs2rBDcGa5DOHzlLRSbiRkme",
-        name: "prog106",
-        email: "prog106@gmail.com",
-        url: "https://static.popcongame.com/game/game.hotshare.ShurikenHero/tTzRhbCBWm.jpg",
-    },
-];
+
+
 
 const saltRounds = config.bcrypt.saltRounds;
 
-export async function getUser(userid) {
-    return await users.find((item) => item.userid === userid);
+export async function getUser(id) {
+    return db.execute(`SELECT * FROM dwitter_user WHERE id = ?`, [id]).then(result => {
+        return result[0][0];
+    });
+    // return await users.find((item) => item.userid === userid);
 }
 
-export async function LoginUser(username, password) {
-    return await users
-        .filter((item) => item.username === username)
-        .find((item) => bcrypt.compareSync(password, item.password));
+export async function loginUser(username, password) {
+    return db.execute(`SELECT * FROM dwitter_user WHERE username = ?`, [username]).then(result => {
+        const user = result[0][0];
+        if(!user) return null;
+        const auth = bcrypt.compareSync(password, user.password);
+        return auth && user || null;
+    });
+    // return await users
+    //     .filter((item) => item.username === username)
+    //     .find((item) => bcrypt.compareSync(password, item.password));
 }
 
 export function signupUser(username, password, name, email, url) {
     const hashed = bcrypt.hashSync(password, saltRounds);
-    const user = {
-        userid: Date.now(),
-        username: username,
-        password: hashed,
-        name: name,
-        email: email,
-        url: url,
-    };
-    users.push(user);
-    // let users = [...users, user];
-    return user;
+    return db.execute('INSERT INTO dwitter_user (username, password, name, email, url) VALUES (?, ?, ?, ?, ?)',
+    [username, hashed, name, email, url]).then(result => {
+        return result[0].insertId;
+    });
 }

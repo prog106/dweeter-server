@@ -27,13 +27,13 @@ export async function signupUser(req, res) {
     else return res.sendStatus(201);
 }
 
-export async function LoginUser(req, res) {
+export async function loginUser(req, res) {
     const { username, password } = req.body;
-    const user = await authModel.LoginUser(username, password);
+    const user = await authModel.loginUser(username, password);
     if (!user) return res.status(200).json({ message: `User not found` });
     const token = jwt.sign(
         {
-            userid: user.userid,
+            id: user.id,
         },
         secret,
         {
@@ -45,9 +45,8 @@ export async function LoginUser(req, res) {
     return res.status(200).json(user);
 }
 
-export async function Me(req, res, next) {
-    console.log(req.userid, req.token);
-    const user = await authModel.getUser(req.userid);
+export async function me(req, res, next) {
+    const user = await authModel.getUser(req.id);
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.status(200).json({ username: user.username });
 }

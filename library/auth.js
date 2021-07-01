@@ -15,11 +15,11 @@ export const isAuth = (req, res, next) => {
         if (error) {
             return res.status(401).json({ message: "Authorization 2" });
         }
-        const user = await authModel.getUser(decoded.userid);
+        const user = await authModel.getUser(decoded.id);
         if (!user) {
             return res.status(401).json({ message: "Authorization Error3" });
         }
-        req.userid = user.userid;
+        req.id = user.id;
         next();
     });
 };

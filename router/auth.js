@@ -51,9 +51,9 @@ router.post(
             .withMessage("비밀번호가 너무 짧습니다."),
         validate,
     ],
-    authController.LoginUser
+    authController.loginUser
 );
 
-router.get("/me", isAuth, authController.Me);
+router.get("/me", isAuth, authController.me);
 
 export default router;
