@@ -1,3 +1,4 @@
+import { getSocketIO } from "../connection/socket.js";
 import * as tweetsModel from "../model/tweet.js";
 
 export async function getTweets(req, res) {
@@ -22,7 +23,8 @@ export async function postTweet(req, res) {
     const { text } = req.body;
     const userid = req.userid;
     const tweet = await tweetsModel.createTweet(text, userid);
-    return res.status(201).json(tweet);
+    res.status(201).json(tweet);
+    getSocketIO().emit("tweets", tweet);
 }
 
 export async function putTweet(req, res) {

@@ -9,7 +9,16 @@ let users = [
             "$2b$10$Du5jiGH9yROCl0.wXmhFxua/9xN3BEs2rBDcGa5DOHzlLRSbiRkme",
         name: "LSK",
         email: "prog106@gmail.com",
-        url: "",
+        url: "https://static.popcongame.com/game/game.hotshare.ShurikenHero/tTzRhbCBWm.jpg",
+    },
+    {
+        userid: 1624856981978,
+        username: "prog106",
+        password:
+            "$2b$10$Du5jiGH9yROCl0.wXmhFxua/9xN3BEs2rBDcGa5DOHzlLRSbiRkme",
+        name: "prog106",
+        email: "prog106@gmail.com",
+        url: "https://static.popcongame.com/game/game.hotshare.ShurikenHero/tTzRhbCBWm.jpg",
     },
 ];
 
