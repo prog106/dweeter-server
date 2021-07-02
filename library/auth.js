@@ -13,7 +13,7 @@ export const isAuth = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     jwt.verify(token, secret, async (error, decoded) => {
         if (error) {
-            return res.status(401).json({ message: "Authorization 2" });
+            return res.status(401).json({ message: "Authorization 2" + error });
         }
         const user = await authModel.getUser(decoded.id);
         if (!user) {
